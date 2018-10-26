@@ -20,8 +20,24 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="conteudo\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="conteudo\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="conteudo\**" />
+    <None Remove="conteudo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="System.String[]download.png" />
+    <None Remove="System.String[]mer1 - Copia %281%29.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\conteudo\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

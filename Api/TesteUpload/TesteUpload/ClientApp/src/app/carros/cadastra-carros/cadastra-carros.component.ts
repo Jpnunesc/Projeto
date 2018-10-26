@@ -1,7 +1,11 @@
 
 import { CarroModel } from '../../../models/carros-model';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType } from '@angular/common/http';
+import { ToastsManager } from 'ng2-toastr';
+import { timeout } from 'q';
+
+
 
 
 @Component({
@@ -11,7 +15,7 @@ import { HttpClient, HttpRequest, HttpEventType } from '@angular/common/http';
 })
 export class CadastraCarrosComponent implements OnInit {
 
-
+  sucesso = false;
   public retorno: string;
   public carro: CarroModel = new CarroModel();
   private baseUrl: string;
@@ -20,12 +24,14 @@ export class CadastraCarrosComponent implements OnInit {
   private arquivos: FileList;
   private imagemPrincipal: FileList;
   principal = 'ImagemPrincipal';
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, public toastr: ToastsManager, vcr: ViewContainerRef) {
     this.baseUrl = baseUrl;
     this.http = http;
+    this.toastr.setRootViewContainerRef(vcr);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.toastr.success('Operação realizada com sucesso!');
   }
   salvar() {
     const fd = new FormData();
@@ -50,7 +56,10 @@ export class CadastraCarrosComponent implements OnInit {
       } else if (event.type === HttpEventType.Response) {
         console.log(`Retorno: ${event.body.toString()}`);
       }
+      this.sucesso = true;
+      setTimeout(() => this.sucesso = false, 6000);
     });
+    this.carro = new CarroModel();
   }
 
   arquivosSelecionados(event) {
@@ -59,6 +68,11 @@ export class CadastraCarrosComponent implements OnInit {
 
   arquivoPrincipal(event) {
     this.imagemPrincipal = event.target.files;
+  }
+
+  showSuccess() {
+    this.sucesso = true;
+    setTimeout(() => this.sucesso = false, 10000);
   }
 }
 

@@ -1,64 +1,15 @@
-<!-- <h1>Carro</h1>
-
-<form class="form-horizontal">
-  <div class="form-group">
-    <label for="marca" class="col-sm-2 control-label">Marca</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" placeholder="Marca" [(ngModel)]="carro.marca" name="marca">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="modelo" class="col-sm-2 control-label">Modelo</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" placeholder="Modelo" [(ngModel)]="carro.modelo" name="modelo">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="ano" class="col-sm-2 control-label">Ano</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" placeholder="Ano" [(ngModel)]="carro.ano" name="ano">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="ano" class="col-sm-2 control-label">Imagens</label>
-    <div class="col-sm-10">
-      <input type="file" multiple class="form-control" placeholder="Imagens" name="imagens" (change)="arquivosSelecionados($event)">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default" (click)="salvar()">Cadastrar</button>
-    </div>
-  </div>
-</form> -->
-
-
 
 <form class="form-horizontal">
   <h2 style="color: black;">Cadastro de carros:</h2>
   <p></p>
   <div class="form-group">
-    <button type="button" class="btn btn-danger" (click)="salvar()" style="margin-left: 85%; width: 150px;">Salvar</button>
+    <button type="button" class="btn btn-danger" (click)="showSuccess()" style="margin-left: 85%; width: 150px;">Salvar</button>
   </div>
   <p></p>
-<!-- 
-  <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxFlex class="coloredContainerX box">
-    <div fxFlex="10" class="col-12" style="margin-right:1%;">
-      <mat-label appearance="outline" fxFlex="20" class="col-12" style="margin-top: 1.5%; margin-right: 1%; margin-bottom: 1em">Natureza do Recurso:</mat-label>
+  <div class="alert alert-success" *ngIf="sucesso">
+      <strong>Sucesso!</strong><a href="#" class="alert-link">Dados salvos.</a>.
     </div>
-    <div fxFlex="30" class="col-12" style="margin-right:1%;">
-      <mat-radio-group (change)="NaturezaRecursoSelecionada($event.value)">
-        <mat-radio-button value="1" [checked]="formRecursos.sebraeSelecionado" style="margin-right: 3%;">Sistema Sebrae</mat-radio-button>
-        <mat-radio-button value="2" [checked]="formRecursos.terceiroSelecionado" style="margin-right: 1%;">Terceiro</mat-radio-button>
-      </mat-radio-group>
-    </div>
-  </div> -->
-
-
+    <p></p>
   <div class="form-check">
     <label class="form-check-label">
       <input type="checkbox" class="form-check-input" name="2" value="option1" [(ngModel)]="carro.carroAntigo">Carro Antigo
@@ -69,15 +20,6 @@
       <input type="checkbox" class="form-check-input" name="1" value="option2" [(ngModel)]="carro.carroSeminovo">Carro Seminovo
     </label>
   </div>
-
-  <!-- <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" [(ngModel)]="carro.carroAntigo">
-    <label class="form-check-label" for="inlineCheckbox1" style="color:black;"></label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" [(ngModel)]="carro.carroSeminovo">
-    <label class="form-check-label" for="inlineCheckbox2" style="color:black"></label>
-  </div> -->
   <p></p>
   <div class="row">
     <div class="form-group">

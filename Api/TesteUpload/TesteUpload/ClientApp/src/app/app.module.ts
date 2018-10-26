@@ -13,6 +13,7 @@ import { ListaCarrosComponent } from './carros/lista-carros/lista-carros.compone
 import { CadastraCarrosComponent } from './carros/cadastra-carros/cadastra-carros.component';
  import { CarroService } from '../services/carro-service';
 import { HttpModule } from '@angular/http';
+import { CadastraEventosComponent } from './eventos/cadastra-eventos/cadastra-eventos.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { HttpModule } from '@angular/http';
     CounterComponent,
     FetchDataComponent,
     ListaCarrosComponent,
-    CadastraCarrosComponent
+    CadastraCarrosComponent,
+    CadastraEventosComponent,
 
   ],
   imports: [
@@ -36,6 +38,7 @@ import { HttpModule } from '@angular/http';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'carros', component: CadastraCarrosComponent },
+      { path: 'eventos', component: CadastraEventosComponent },
     ])
   ],
   providers: [CarroService],

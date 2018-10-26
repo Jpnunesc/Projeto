@@ -12,9 +12,16 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
             <ul class='nav navbar-nav'>
+
+                    <li [routerLinkActive]='["link-active"]'>
+                            <a [routerLink]='["/carros"]' (click)='collapse()'>
+                                <span class='glyphicon glyphicon-th-list'></span> Carros Antigos
+                            </a>
+                        </li>
+
                 <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-                    <a [routerLink]='["/"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-home'></span> Home
+                    <a [routerLink]='["/eventos"]' (click)='collapse()'>
+                        <span class='glyphicon glyphicon-th-list'></span> Eventos
                     </a>
                 </li>
                 <li [routerLinkActive]='["link-active"]'>
@@ -27,11 +34,7 @@
                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
                     </a>
                 </li>
-                <li [routerLinkActive]='["link-active"]'>
-                    <a [routerLink]='["/carros"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-shopping-cart'></span> Carros Antigos
-                    </a>
-                </li>
+
             </ul>
         </div>
     </div>

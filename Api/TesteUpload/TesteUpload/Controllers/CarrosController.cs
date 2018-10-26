@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,29 +13,31 @@ using TesteUpload.Model;
 
 namespace TesteUpload.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
     public class CarrosController : ControllerBase
     {
         private readonly UP7WebApiContext _context;
+        private IHostingEnvironment _env;
 
-        public CarrosController(UP7WebApiContext context)
+        public CarrosController(UP7WebApiContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: api/Carros
         [HttpGet]
         [EnableCors("MyPolicy")]
-        public async Task<ReturnModel> Getcarro()
-        {
+        [Route("antigos")]
+        public async Task<ReturnModel> GetcarroAntigos()
+       {
             ReturnModel result = new ReturnModel();
-            var carro =  _context.carro.Include(x => x.Imagem).AsQueryable();
+            var carro = _context.carro.Where(x => x.CarroAntigo == true).AsQueryable();
 
-            result.Object =  carro.Select(p => new 
+            result.Object = await carro.Select(p => new 
             {
                p.Id,
-               p.Imagem,
                p.Marca,
                p.Modelo,
                p.Ano,
@@ -52,41 +55,83 @@ namespace TesteUpload.Controllers
                p.Rodas,
                p.StatusCarro,
                p.CarroAntigo,
-               p.CarroSeminovo 
+               p.CarroSeminovo, 
+               p.CaminhoImagem
 
-           }).ToList();
+           }).ToListAsync();
+
+            
             result.Success = true;
             result.Message = "sucesso!!";
             return result;
 
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Getcarro()
-        //{
-        //    // return _context.carro;
-        //    var carro = await _context.carro.Include(x => x.Imagem).ToListAsync();
-        //    return Ok(carro);
-        //}
+        [HttpGet]
+        [EnableCors("MyPolicy")]
+        [Route("seminovo")]
+        public async Task<ReturnModel> GetcarroSeminovo()
+        {
+            ReturnModel result = new ReturnModel();
+            var carro = _context.carro.Where(x => x.CarroSeminovo == true).AsQueryable();
+
+            result.Object = await carro.Select(p => new
+            {
+                p.Id,
+                p.Marca,
+                p.Modelo,
+                p.Ano,
+                p.Descricao,
+                p.Preco,
+                p.Cor,
+                p.Quilometragem,
+                p.Potencia,
+                p.PaisOrigem,
+                p.Bancos,
+                p.ArCondicionado,
+                p.Vidros,
+                p.Freios,
+                p.Tracao,
+                p.Rodas,
+                p.StatusCarro,
+                p.CarroAntigo,
+                p.CarroSeminovo,
+                p.CaminhoImagem
+
+            }).ToListAsync();
+
+
+            result.Success = true;
+            result.Message = "sucesso!!";
+            return result;
+
+        }
+
 
         // GET: api/Carros/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("antigos/{id}")]
         [EnableCors("MyPolicy")]
         public async Task<IActionResult> GetCarroModel([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            ReturnModel result = new ReturnModel();
+
+            var carro =  _context.carro.Include(x => x.Imagem).AsQueryable();
+            result.Object = await carro.Select(p => p.Id == id).FirstOrDefaultAsync();
+
+            if (result.Object != null)
             {
-                return BadRequest(ModelState);
-            }
-
-            var carroModel = await _context.carro.FindAsync(id);
-
-            if (carroModel == null)
+                result.Success = true;
+                result.Message = "sucesso!!";
+                
+            } else
             {
-                return NotFound();
+                result.Success = false;
+                result.Message = "erro!!";
             }
+            
 
-            return Ok(carroModel);
+            return Ok(result);
         }
 
         // PUT: api/Carros/5
@@ -124,6 +169,7 @@ namespace TesteUpload.Controllers
 
             return NoContent();
         }
+
         [Produces("application/json")]
         [HttpPost, DisableRequestSizeLimit]
         [EnableCors("MyPolicy")]
@@ -133,14 +179,20 @@ namespace TesteUpload.Controllers
             {
                 var carroImagem = new List<ImagemModel>();
                 var carro = JsonConvert.DeserializeObject<CarroModel>(Request.Form["carro"]);
-                var filePath = Path.GetTempPath();
+
+                var webRoot = _env.WebRootPath;
+                var filePath = System.IO.Path.Combine(webRoot, "conteudo\\");
+
+               
+
 
                 foreach (var arquivo in Request.Form.Files)
                 {
                     if (arquivo.Length > 0)
                     {
-                        carro.Imagem.Add(new ImagemModel { Caminho = $"{Path.GetTempPath()}{arquivo.FileName}" });
-                        var imagem = $"{Path.GetTempPath()}{arquivo.FileName}";
+                        carro.Imagem.Add(new ImagemModel { Caminho = $"{filePath}{arquivo.FileName}" });
+                        carro.CaminhoImagem = ($"conteudo/{arquivo.FileName}");
+                        var imagem = $"{ filePath}{ arquivo.FileName}";
                         using (var stream = new FileStream(imagem, FileMode.Create))
                         {
                             await arquivo.CopyToAsync(stream);
@@ -158,7 +210,6 @@ namespace TesteUpload.Controllers
 
             return Ok("sucess");
         }
-
         // DELETE: api/Carros/5
         [HttpDelete("{id}")]
         [EnableCors("MyPolicy")]
